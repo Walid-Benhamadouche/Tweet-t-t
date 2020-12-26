@@ -10,11 +10,26 @@
 </template>
 
 <script>
-import {users} from '../assets/users'
+import { onMounted, ref } from 'vue'
+//import {users} from '../assets/users'
+import UserService from "../services/UserService"
 
 export default {
   name: 'Home',
   setup(){
+    const users = ref([])
+
+    onMounted(() => {
+      getUsers();
+    })
+
+    async function getUsers(){
+      UserService.getUsers()
+      .then(us => {
+        users.value = us
+      })
+    }
+
     return {
       users
     }

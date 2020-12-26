@@ -3,7 +3,7 @@
     <nav>
       <router-link to="/">
         <div class="navigation__logo">
-          Tweeter-t-t
+          Tweet-t-t
         </div>
       </router-link>
       <div class="navigation__user" v-if="user">
@@ -14,9 +14,9 @@
   </div>
 </template>
 
-<script>
+<script> 
 import { useStore } from 'vuex';
-import { computed } from 'vue'
+import { computed, } from 'vue'
 
 export default {
   name: 'App',
@@ -25,7 +25,7 @@ export default {
     const user = computed(() => store.state.User.user);
 
     return {
-      user
+      user,
     }
   }
 }
