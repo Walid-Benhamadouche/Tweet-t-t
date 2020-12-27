@@ -1,36 +1,46 @@
 <template>
     <h1><strong>Log In</strong></h1>
     <form action="" class="logIn" @submit.prevent="logInUser">
-        <label for="email">E-mail</label>
-        <input id="email" type="text" v-model="login.email"/>
-        <label for="password">Password</label>
-        <input id="password" type="text" v-model="login.password"/>
+        <label for="emailLogIn">E-mail</label>
+        <input id="emailLogIn" type="text" v-model="login.Email"/>
+        <label for="passwordLogIn">Password</label>
+        <input id="passwordLogIn" type="password" v-model="login.HashCode"/>
+        <button>
+            Log In
+        </button>
     </form>
-    <button>
-        Log In
-    </button>
 </template>
 
 <script>
 import { reactive } from 'vue'
+import router from '../router/index'
+import store from '../store/index'
+import UserService from '../services/UserService'
 
 export default {
     name: "LogIn",
     setup(){
         const login = reactive({
-            email: '',
-            password: ''
+            Email: '',
+            HashCode: ''
         })
 
         function logInUser(){
-            if(login.email !='' && login.password !=''){
-                console.log("login")
+            console.log("started")
+            if(login.Email !='' && login.HashCode !=''){
+                console.log("passed check")
+                UserService.logIn(login)
+                .then(user => {
+                    console.log(user)
+                    store.dispatch('User/setUser', user)
+                    router.push("/")
+                })
             }
         }
 
         return {
             login,
-            logInUser
+            logInUser,
         }
     }
 }
