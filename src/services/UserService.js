@@ -2,9 +2,13 @@ import axio from "axios"
 
 axio.defaults.withCredentials = true
 export default {
-    async getUsers(){
-        let user = await axio.get("http://localhost:5000/test");
-        console.log(user.data);
+    async auth(){
+        let auth = await axio.get("http://localhost:5000/users/auth")
+        console.log(auth.data.loggedIn)
+        return auth.data
+    },
+    async getUser(){
+        let user = await axio.get("http://localhost:5000/users/getUser");
         return user.data
     },
     async logIn(data){

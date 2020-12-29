@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-//import { users } from '../assets/users'
-//import store from '../store'
+import store from '../store/index'
+import UserService from '../services/UserService'
 import Home from '../views/Home.vue'
 import UserProfile from '../views/UserProfile.vue'
 import LogInSignUp from '../views/LogInSignUp.vue'
@@ -47,18 +47,26 @@ const router = createRouter({
   routes
 })
 
-/*router.beforeEach(async(to,from,next) => {
-  const user = store.state.User.user;
-  //const isAdmin = true;
-  //const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin);
-  const requiresUser = to.matched.some(record => record.meta.requiresUser);
-
-  if(!user && requiresUser) next({ name: 'signup'});
-    //await store.dispatch('User/setUser', users[0])
-  else next();  
-
-  //if(requiresAdmin && !isAdmin) next({ name: 'Home'});
-  //else next();
-})*/
+router.beforeEach(async(to,from,next) => {
+  const auth = await UserService.auth()
+  const requiresUser = to.matched.some(record => record.meta.requiresUser)
+  
+  console.log(auth.loggedIn)
+  if(store.state.User.user === null && !requiresUser){
+    console.log("in signup") 
+    next();
+  }
+  else if(!auth.loggedIn) {
+    console.log("here")
+    next({ name: 'signup'})
+  }
+  else{
+    console.log("getting user")
+    const user = await UserService.getUser()
+    console.log("user: ", user)
+    store.dispatch('User/setUser', user)
+    next();
+  }
+})
 
 export default router

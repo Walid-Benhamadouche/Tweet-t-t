@@ -3,10 +3,19 @@ const cors = require('cors')
 const User = require('./models/User')
 const router = express.Router();
 
+//check if user is logged in
+router.get('/auth', async (req, res) => {
+  console.log(req.session.loggedIn)
+  if(!req.session.loggedIn===true) {
+    console.log("returning false")
+    res.json({loggedIn: false})}
+  else res.json({loggedIn: true})
+});
 
-router.get('/login', async (req, res) => {
+//get user information when page changes
+router.get('/getUser', async (req, res) => {
   try{
-    const user = await User.findOne({ Email: req.query.Email, HashCode: req.query.HashCode})
+    const user = await User.findOne({ _id: req.session._id})
     const userInfo = {
       _id: user._id, 
       UserName: user.UserName,
@@ -15,19 +24,30 @@ router.get('/login', async (req, res) => {
       LastName: user.LastName,
       IsAdmin: user.IsAdmin
     }
-    req.session.regenerate(function(err) {
-      req.session.UserName = userInfo.UserName;
-      req.session.cookie.UserName = userInfo.UserName
-      req.session.save(function(err) {
-        if(!err) console.log("saved to store")
-        console.log(req.session.UserName)
-      res.cookie(req.session.cookie)
-      })
-})
-    
+    res.json(userInfo)
   }catch(err){
-    res.json({ message: err })
+    console.log(err)
   }
+})
+
+
+//log in and creat cookie
+router.get('/login', async (req, res) => {
+    try{
+      console.log("inside log in function")
+      const user = await User.findOne({ Email: req.query.Email, HashCode: req.query.HashCode})
+      req.session.regenerate(function(err) {
+        req.session.loggedIn = true
+        req.session._id = user._id;
+        console.log(req.session)
+        req.session.save(function(err) {
+          if(!err) console.log("saved to store")
+          res.cookie(req.session.cookie).send()
+        })
+  })
+    }catch(err){
+      res.json({ message: err })
+    }
 });
 
 router.get('/all', async (req, res) => {
@@ -37,7 +57,7 @@ router.get('/all', async (req, res) => {
   }catch(err){
     res.json({ message: err })
   }*/
-  console.log("this is the /all print", req.session.UserName)
+  //console.log("this is the /all print", req.session._id)
 })
 
 router.post('/signup', async (req, res) => {

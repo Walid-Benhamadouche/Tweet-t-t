@@ -14,7 +14,6 @@
 <script>
 import { reactive } from 'vue'
 import router from '../router/index'
-import store from '../store/index'
 import UserService from '../services/UserService'
 
 export default {
@@ -26,14 +25,11 @@ export default {
         })
 
         function logInUser(){
-            console.log("started")
             if(login.Email !='' && login.HashCode !=''){
-                console.log("passed check")
+                console.log("calling log in")
                 UserService.logIn(login)
                 .then(user => {
-                    console.log("here")
                     console.log(user)
-                    store.dispatch('User/setUser', user)
                     router.push("/")
                 })
             }
