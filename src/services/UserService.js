@@ -1,5 +1,6 @@
 import axio from "axios"
 
+axio.defaults.withCredentials = true
 export default {
     async getUsers(){
         let user = await axio.get("http://localhost:5000/test");
@@ -9,6 +10,7 @@ export default {
     async logIn(data){
         console.log(data)
         let user = await axio.get("http://localhost:5000/users/login", {params: data });
+        console.log(user.data)
         return user.data
     },
     async signUp(data){

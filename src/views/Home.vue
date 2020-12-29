@@ -12,26 +12,26 @@
 <script>
 import { onMounted, ref } from 'vue'
 //import {users} from '../assets/users'
-import UserService from "../services/UserService"
+//import UserService from "../services/UserService"
 
 export default {
   name: 'Home',
   setup(){
     const users = ref([])
-
     onMounted(() => {
-      getUsers();
+      //checkUser();
+      //getUsers();
     })
 
-    async function getUsers(){
+    /*async function getUsers(){
       UserService.getUsers()
       .then(us => {
         users.value = us
       })
-    }
+    }*/
 
     return {
-      users
+      users,
     }
   }
 }

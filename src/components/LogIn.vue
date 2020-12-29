@@ -31,6 +31,7 @@ export default {
                 console.log("passed check")
                 UserService.logIn(login)
                 .then(user => {
+                    console.log("here")
                     console.log(user)
                     store.dispatch('User/setUser', user)
                     router.push("/")

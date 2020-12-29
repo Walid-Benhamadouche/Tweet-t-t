@@ -7,7 +7,7 @@
         </div>
       </router-link>
       <div class="navigation__user" v-if="user">
-        {{user.userName}}
+        {{user.UserName}}
       </div>
     </nav>
     <router-view/>
