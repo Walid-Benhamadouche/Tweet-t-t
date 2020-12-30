@@ -30,6 +30,23 @@ router.get('/getUser', async (req, res) => {
   }
 })
 
+router.get('/getUserId', async (req, res) => {
+  try{
+    console.log("data", req.query._id)
+    const user = await User.findOne({ _id: req.query._id})
+    const userInfo = {
+      _id: user._id, 
+      UserName: user.UserName,
+      Email: user.Email,
+      FirstName: user.FirstName,
+      LastName: user.LastName,
+      IsAdmin: user.IsAdmin
+    }
+    res.json(userInfo)
+  }catch(err){
+    console.log(err)
+  }
+})
 
 //log in and creat cookie
 router.get('/login', async (req, res) => {
@@ -61,17 +78,25 @@ router.get('/all', async (req, res) => {
 })
 
 router.post('/signup', async (req, res) => {
-  const user = new User({
-    UserName: req.query.UserName,
-    Email: req.query.Email,
-    HashCode: req.query.Password,
-    FirstName: req.query.FirstName,
-    LastName: req.query.LastName,
-    IsAdmin: false
-  });
   try{
+    const user = new User({
+      UserName: req.query.UserName,
+      Email: req.query.Email,
+      HashCode: req.query.Password,
+      FirstName: req.query.FirstName,
+      LastName: req.query.LastName,
+      IsAdmin: false
+    })
     const savedUser = await user.save()
-    res.json(savedUser)
+    req.session.regenerate(function(err) {
+      req.session.loggedIn = true
+      req.session._id = savedUser._id;
+      console.log(req.session)
+      req.session.save(function(err) {
+        if(!err) console.log("saved to store")
+        res.cookie(req.session.cookie).send()
+      })
+})
   }
   catch(err){
     res.json({ message: err })

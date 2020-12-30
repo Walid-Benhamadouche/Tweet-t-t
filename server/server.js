@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const session = require('express-session')
 const postsRoute = require('./user')
+const tweet = require('./tweet')
 const MongoDBStore = require('connect-mongodb-session')(session)
 require('dotenv/config')
 const genuuid = require('uuid/v4');
@@ -55,6 +56,7 @@ app.use(session({
 }))
 
 app.use('/users', postsRoute)
+app.use('/tweet', tweet)
 
 const port = 5000
 

@@ -5,7 +5,7 @@
                 @{{username}}
             </div>
             <div class="tweet-item__content">
-                {{tweet.content}}
+                {{tweet}}
             </div>
         </div>
     </div>
@@ -20,7 +20,7 @@ export default {
             required: true
         },
         tweet: {
-            type: Object,
+            type: String,
             required: true
         }
     },
