@@ -19,6 +19,7 @@
       :key="tweet._id" 
       :username="user.UserLoaded.UserName" 
       :tweet="tweet.Body" 
+      :userId="tweet.UserId"
       />
     </div>
     
@@ -88,7 +89,7 @@ export default {
       UserService.getTweets({UserIdT: temp})
       .then(tweetss => {
         for (let tt of tweetss){
-          state.tweets.unshift({_d: tt._id, UserId: tt.User, Body: tt.Body})
+          state.tweets.unshift({_id: tt._id, UserId: tt.UserId, Body: tt.Body})
         }
       })
     })
@@ -118,9 +119,10 @@ export default {
       //call api here to add a new tweet
       UserService.Tweet({
         UserIdT: user.UserLoaded._id,
-        Body: tweetBody
+        Body: tweetBody,
+        UserName: user.UserLoaded.UserName
       }).then(tweet => {
-        state.tweets.unshift({_id: tweet._id, UserId: tweet.User, Body: tweet.Body})
+        state.tweets.unshift({_id: tweet._id, UserId: tweet.UserId, Body: tweet.Body})
       })
     }
     return {

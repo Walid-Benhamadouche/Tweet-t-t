@@ -6,7 +6,8 @@ router.post('/tweet', async (req, res) => {
     try{
         const TweetContent = new Tweet({
             UserId: req.query.UserIdT,
-            Body: req.query.Body
+            Body: req.query.Body,
+            UserName: req.query.UserName
         })
         const savedTweet = await TweetContent.save()
         console.log("trying to post after save", savedTweet)

@@ -1,9 +1,9 @@
 <template>
     <div class="tweet-item">
         <div class="user-profile__tweet">
-            <div class="tweet-item__user">
+            <router-link class="tweet-item__user" :to="{ name: 'UserProfile', params: { userId: userId }}">
                 @{{username}}
-            </div>
+             </router-link>
             <div class="tweet-item__content">
                 {{tweet}}
             </div>
@@ -22,6 +22,10 @@ export default {
         tweet: {
             type: String,
             required: true
+        },
+        userId: {
+            type: String,
+            requires: true
         }
     },
 }
