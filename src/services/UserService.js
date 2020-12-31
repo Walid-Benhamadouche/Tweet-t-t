@@ -33,5 +33,22 @@ export default {
     async getTweets(data){
         let tweets = await axio.get("http://localhost:5000/tweet/getTweets", {params: data})
         return tweets.data
+    },
+    async follow(data){
+        let follow = await axio.post("http://localhost:5000/follow/follow", null, {params: data})
+        return follow.data
+    },
+    async getFollowing(data){
+        let following = await axio.get("http://localhost:5000/follow/getFollowings", {params: data})
+        return following.data
+    },
+    async getFollower(data){
+        let follower = await axio.get("http://localhost:5000/follow/getFollowers", {params: data})
+        return follower.data
+    },
+    async unFollow(data){
+        let unfollow = await axio.delete("http://localhost:5000/follow/unfollow", {params: data})
+        console.log(unfollow.data)
+        return unfollow.data
     }
 }

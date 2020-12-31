@@ -6,7 +6,9 @@
             Admin
         </div>
         <div class="user-profile__follower-count">
-            <strong>Followers: </strong> {{0}}
+            <strong>Following: {{state.following.length}}</strong> <strong>Followers: {{state.followers.length}}</strong>
+            <button v-if="!userProfile.test && !state.followState" @click="followF">Follow</button>
+            <button v-if="!userProfile.test && state.followState" @click="unfollowF">Unfollow</button>
         </div>
         <CreatTweetPanel v-if="userProfile.test" @addTweet="addTweet"></CreatTweetPanel>
     </div>
@@ -46,7 +48,9 @@ export default {
     const route = useRoute()
     const userId = computed(() => route.params.userId)
     const state = reactive({
-      followers: 0,
+      followers: [],
+      following: [],
+      followState: false,
       tweets: []/*{
         _id: '',
         UserId: '',
@@ -65,6 +69,22 @@ export default {
       }
       //get all this users tweets
       let temp = userId.value
+
+      UserService.getFollower({_id: temp})
+      .then(followerss => {
+        for (let frs of followerss){
+          if (frs.Follower === userProfileId.value) state.followState = true
+          state.followers.unshift(frs.Follower)
+        }
+      })
+
+      UserService.getFollowing({_id: temp})
+      .then(followingss => {
+        for (let flns of followingss){
+          state.following.unshift(flns.Following)
+        }
+      })
+
       UserService.getTweets({UserIdT: temp})
       .then(tweetss => {
         for (let tt of tweetss){
@@ -72,6 +92,27 @@ export default {
         }
       })
     })
+
+    function followF(){
+      UserService.follow({
+        userId: userId.value
+      }).then(follow => {
+        state.followState = true
+        state.followers.unshift(follow.Follower)
+      })
+    }
+
+    function unfollowF(){
+      UserService.unFollow({
+        _id: userId.value
+      }).then(() => {
+        state.followState = false
+        var index = state.followers.indexOf(userProfileId.value);
+        if (index > -1) {
+            state.followers.splice(index, 1);
+         }
+      })
+    }
 
     function addTweet(tweetBody) {
       //call api here to add a new tweet
@@ -87,7 +128,9 @@ export default {
       userProfile,
       state,
       addTweet,
-      userId
+      userId,
+      followF,
+      unfollowF
     }
 
   },
