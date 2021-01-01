@@ -6,20 +6,23 @@
           Tweet-t-t
         </div>
       </router-link>
-      <div class="navigation__user" v-if="user">
+      <router-link class="navigation__user" v-if="user" :to="{ name: 'UserProfile', params: { userId: user._id }}">
         {{user.UserName}}
-      </div>
+      </router-link>
     </nav>
     <router-view/>
+    <chat chatName="username"/>
   </div>
 </template>
 
 <script> 
 import { useStore } from 'vuex';
-import { computed, } from 'vue'
+import { computed } from 'vue'
+import chat from './components/ChatBox'
 
 export default {
   name: 'App',
+  components: { chat },
   setup() {
     const store = useStore()
     const user = computed(() => store.state.User.user);
@@ -39,6 +42,7 @@ export default {
   color: #2c3e50;
   min-height: 10hv;
   background-color: #F3F5FA;
+  height: 100%;
 
   nav {
     display: flex;
@@ -55,6 +59,8 @@ export default {
     .navigation__user {
       font-weight: bold;
     }
+
   }
+
 }
 </style>

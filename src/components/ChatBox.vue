@@ -19,7 +19,7 @@
 <script>
 
 import { onMounted, reactive } from 'vue'
-//import io from 'socket.io'
+import io from 'socket.io-client'
 
 export default {
     props: {
@@ -86,9 +86,9 @@ export default {
             }]
         })
 
-        onMounted(() => {
-          //const socket = io('ws://localhost:5000/')
-          //console.log("what is this ?", socket)
+        onMounted(async () => {
+          const socket = await io('ws://localhost:5000')
+          console.log("what is this ?", socket)
         })
 
         return {
