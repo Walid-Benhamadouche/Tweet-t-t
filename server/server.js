@@ -6,6 +6,7 @@ const session = require('express-session')
 const postsRoute = require('./user')
 const tweet = require('./tweet')
 const follow = require('./follow')
+const chat = require('./chat')
 const MongoDBStore = require('connect-mongodb-session')(session)
 require('dotenv/config')
 const genuuid = require('uuid/v4');
@@ -14,13 +15,19 @@ mongoose.connect(process.env.DB_CONNECTION,{ useNewUrlParser: true,useUnifiedTop
 
 //`Hi! Server is listening on port ${port}`
 const server = require('http').Server(app)
-
+var people={};
 const io = require('socket.io')(server, {
     cors: { origin: "*" }
 });
 
 io.on('connection', (socket) => {
-    console.log('user connected to socket.io')
+    people[socket.handshake.query.userId] = socket.id
+    console.log("socket.id", people)
+    socket.on('message', (message) => {
+        console.log("on message ", message);
+        console.log("socket.id from table",people);
+        io.to(people[message.receiverId]).emit('message', message );
+    });
 })
 
 const store = new MongoDBStore(
@@ -67,6 +74,7 @@ app.use(session({
 app.use('/users', postsRoute)
 app.use('/tweet', tweet)
 app.use('/follow', follow)
+app.use('/chat', chat)
 
 //const port = 5000
 

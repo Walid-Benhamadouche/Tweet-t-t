@@ -10,6 +10,7 @@
             <button v-if="!userProfile.test && !state.followState" @click="followF">Follow</button>
             <button v-if="!userProfile.test && state.followState" @click="unfollowF">Unfollow</button>
         </div>
+        <button v-if="!userProfile.test" @click="sendMessage">Send Message</button>
         <CreatTweetPanel v-if="userProfile.test" @addTweet="addTweet"></CreatTweetPanel>
     </div>
     <div class="user-profile__tweet-wrapper">
@@ -27,17 +28,18 @@
 </template>
 
 <script>
-import { onMounted, reactive, computed } from 'vue';
+import { onMounted, reactive, computed, createApp } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
 import UserService from '../services/UserService'
 import TweetItem from "../components/TweetItem";
 import CreatTweetPanel from "../components/CreateTweetPanel";
+import chat from '../components/ChatBox'
 
 export default {
   name: 'UserProfile',
   components: { TweetItem, CreatTweetPanel },
-  setup() {
+  setup(props, ctx) {
     const userProfile = reactive({
       test: null
     })
@@ -46,9 +48,11 @@ export default {
       UserLoaded: {UserName: ''}
     })
     const userProfileId = computed(() => store.state.User.user._id)
+    const userProfileName = computed(() => store.state.User.user.UserName)
     const route = useRoute()
     const userId = computed(() => route.params.userId)
     const state = reactive({
+      room: '',
       followers: [],
       following: [],
       followState: false,
@@ -125,6 +129,29 @@ export default {
         state.tweets.unshift({_id: tweet._id, UserId: tweet.UserId, Body: tweet.Body})
       })
     }
+
+    async function sendMessage(){
+      await UserService.getChatRoom({_id: userId.value
+      }).then(async (room) => {
+        if(room === null){
+          await UserService.makeChatRoom({_id: userId.value
+          }).then( maderoom => {
+            state.room = maderoom._id
+          })
+        }
+        else state.room = room._id
+        console.log("room id: ",state.room)
+        var instance = createApp(chat, {
+              chatName: user.UserLoaded.UserName,
+              ProfileName: userProfileName,
+              chatId: state.room,
+              senderId: userProfileId.value,
+              receiverId: userId.value
+            })
+        ctx.emit('openChat', instance)
+      })
+    }
+
     return {
       user,
       userProfile,
@@ -132,7 +159,8 @@ export default {
       addTweet,
       userId,
       followF,
-      unfollowF
+      unfollowF,
+      sendMessage
     }
 
   },

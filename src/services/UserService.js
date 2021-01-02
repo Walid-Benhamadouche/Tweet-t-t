@@ -50,5 +50,21 @@ export default {
         let unfollow = await axio.delete("http://localhost:5000/follow/unfollow", {params: data})
         console.log(unfollow.data)
         return unfollow.data
+    },
+    async makeChatRoom(data){
+        let room = await axio.post("http://localhost:5000/chat/Chat", null, {params: data})
+        return room.data
+    },
+    async getChatRoom(data){
+        let room = await axio.get("http://localhost:5000/chat/getChat", {params: data})
+        return room.data
+    },
+    async getMessages(data){
+        let messages = await axio.get("http://localhost:5000/chat/getMessages", {params: data})
+        return messages.data
+    },
+    async sendMessage(data){
+        let message = await axio.post("http://localhost:5000/chat/sendMessage", null, {params: data})
+        return message.data
     }
 }

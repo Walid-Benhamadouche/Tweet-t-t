@@ -3,96 +3,99 @@
       <div class="chat-box__name-bar"><p>{{chatName}}</p></div>
       <ul class="chat-box__body">
           <li v-for="(message,index) in discussion.messages" :key="index">
-            <p class="received" v-if="message.Mtype === 'received'">{{message.messages}}</p>
+            <p class="received" v-if="message.Mtype === 'received'">{{message.message}}</p>
           </li>
           <li v-for="(message,index) in discussion.messages" :key="index">
-          <p class="sent" v-if="message.Mtype === 'sent'">{{message.messages}}</p>
+          <p class="sent" v-if="message.Mtype === 'sent'">{{message.message}}</p>
           </li>
       </ul>
       <div class="chat-box__send-message">
-        <input type="text" class="chat-box__message" placeholder="write a message"/>
-        <button class="chat-box__send">Send</button>
+        <input id="messageToSend" type="text" class="chat-box__message" placeholder="write a message"/>
+        <button class="chat-box__send" @click="sendMessage">Send</button>
       </div>
     </div>
 </template>
 
 <script>
 
-import { onMounted, reactive } from 'vue'
+import { watchEffect, onMounted, reactive } from 'vue'
 import io from 'socket.io-client'
+import UserService from '../services/UserService'
 
 export default {
     props: {
         chatName: {
             type: String,
-            required: true
-        }
+            required: true,
         },
-    setup(){
+        ProfileName: {
+            type: String,
+            required: true
+        },
+        chatId: {
+            type: String,
+            required: true
+        },
+        senderId: {
+          type: String,
+          required: true
+        },
+        receiverId: {
+          type: String,
+          required: true
+          }
+        },
+    setup(props){
         const discussion = reactive({
-            messages: [{
-                messages: "first message",
-                time: Date("20:30"),
-                userName: "someone",
-                Mtype: "sent"
-            },
-            {
-                messages: "first second",
-                time: Date("20:32"),
-                userName: "someone",
-                Mtype: "sent"
-            },
-            {
-                messages: "first third",
-                time: Date("20:34"),
-                userName: "someone",
-                Mtype: "sent"
-            },
-            {
-                messages: "first message",
-                time: Date("20:31"),
-                userName: "someone_else",
-                Mtype: "received"
-            },
-            {
-                messages: "first second",
-                time: Date("20:33"),
-                userName: "someone_else",
-                Mtype: "received"
-            },
-            {
-                messages: "first third",
-                time: Date("20:35"),
-                userName: "someone_else",
-                Mtype: "received"
-            },
-            {
-                messages: "first message",
-                time: Date("20:31"),
-                userName: "someone_else",
-                Mtype: "received"
-            },
-            {
-                messages: "first second",
-                time: Date("20:33"),
-                userName: "someone_else",
-                Mtype: "received"
-            },
-            {
-                messages: "first third",
-                time: Date("20:35"),
-                userName: "someone_else",
-                Mtype: "received"
-            }]
+            socket: '',
+            messages: []
+        })
+
+        watchEffect(async () => {
+          if(discussion.socket != ''){
+            console.log("starting to listen !!!!")
+            discussion.socket.on('message', async (message) => {
+              console.log("message recieved in front end", message)
+              let messageType = ''
+              if(message.senderId === props.senderId) messageType = "sent"
+              else messageType = "received"
+              discussion.messages.push({message: message.text, time: message.date, userName: message.userName, Mtype: messageType})
+          })
+          }
+          else console.log("waiting for socket io to init")
         })
 
         onMounted(async () => {
-          const socket = await io('ws://localhost:5000')
-          console.log("what is this ?", socket)
+          discussion.socket = await io('ws://localhost:5000', { query: "userId="+props.senderId})
+          console.log("what is this ?", discussion.socket)
+          UserService.getMessages({
+            _id: props.chatId
+          }).then(message => {
+            for (let msg of message){
+              let messageType = ''
+              if(msg.userId === props.senderId) messageType = "sent"
+              else messageType = "received"
+              discussion.messages.push({message: msg.body, time: msg.date, userName: msg.userName, Mtype: messageType})
+            }
+          })
+          
         })
 
+        function sendMessage(){
+          let message = document.getElementById("messageToSend").value
+          UserService.sendMessage({
+            roomId: props.chatId,
+            body: message,
+            userName: props.ProfileName,
+          }).then(message => {
+            discussion.socket.emit('message', {text: message.body, receiverId: props.receiverId, date: message.date, senderId: props.senderId, userName: props.ProfileName})
+            discussion.messages.push({message: message.body, time: message.date, userName: props.ProfileName, Mtype: "sent"})
+            document.getElementById("messageToSend").value = ''
+          })
+        }
         return {
-            discussion
+            discussion,
+            sendMessage
         }
     }
 }
@@ -183,7 +186,7 @@ export default {
             padding: 10px;
             background-color: #f8e896;
             width: 150px;
-            height: 20px;
+            height: auto;
             text-align: left;
             font: 400 .9em 'Open Sans', sans-serif;
             border: 1px solid #dfd087;
@@ -198,7 +201,7 @@ export default {
             padding: 10px;
             background-color: #A8DDFD;
             width: 150px;
-            height: 20px;
+            height: auto;
             text-align: left;
             font: 400 .9em 'Open Sans', sans-serif;
             border: 1px solid #97C6E3;

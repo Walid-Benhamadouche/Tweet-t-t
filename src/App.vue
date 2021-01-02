@@ -10,25 +10,30 @@
         {{user.UserName}}
       </router-link>
     </nav>
-    <router-view/>
-    <chat chatName="username"/>
+    <router-view @openChat="openChat"/>
   </div>
 </template>
 
 <script> 
 import { useStore } from 'vuex';
-import { computed } from 'vue'
-import chat from './components/ChatBox'
+import { computed, /*createApp*/ } from 'vue'
 
 export default {
   name: 'App',
-  components: { chat },
   setup() {
     const store = useStore()
-    const user = computed(() => store.state.User.user);
+    const user = computed(() => store.state.User.user)
+
+    function openChat(instance){
+      let app = document.getElementById("app")
+      const div = document.createElement('div')
+      app.appendChild(div)
+      instance.mount(div)
+    }
 
     return {
       user,
+      openChat
     }
   }
 }
