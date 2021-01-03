@@ -4,6 +4,8 @@
             <router-link class="tweet-item__user" :to="{ name: 'UserProfile', params: { userId: userId }}">
                 @{{username}}
              </router-link>
+             <br>
+             <br>
             <div class="tweet-item__content">
                 {{tweet}}
             </div>
@@ -33,16 +35,14 @@ export default {
 <style lang="scss" scoped>
 .tweet-item {
     padding: 20px;
-    background-color: white;
-    border-radius: 5px;
-    border: 1px solid #DFE3E8;
+    margin: 5px;
+    width: 60%;
+    background-color: #212627;
+    border-radius: 10px;
+    border: 1px solid #212627;
     box-sizing: border-box;
-    cursor: pointer;
     transition: all 0.25s ease;
-    
-    &:hover {
-        transform: scale(1.1, 1.1);
-    }
+    color: white;
 
     .tweet-item__user {
         font-weight: bold;

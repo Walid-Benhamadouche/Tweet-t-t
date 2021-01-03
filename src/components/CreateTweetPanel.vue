@@ -56,6 +56,35 @@ export default {
             padding-top: 20px;
             display: flex;
             flex-direction: column;
+            padding: 20px;
+            margin: 5px;
+            width: 60%;
+            background-color: #212627;
+            border-radius: 10px;
+            border: 1px solid #212627;
+            box-sizing: border-box;
+            transition: all 0.25s ease;
+            color: white;
+
+            button {
+                border-radius: 20px;
+                border: 1.5px solid #2d3436;
+                height: 50px;
+                width: 120px;
+                background-color: #2d3436;
+                color: white;
+            }
+
+            #newtweet {
+                border-radius: 20px;
+                border: 1.5px solid #2d3436;
+                height: 60%;
+                width: 100%;
+                background-color:  #2d3436;
+            }
+            #newtweet {
+                outline: none;
+            }
 
             &.exceeded {
                 color: red;

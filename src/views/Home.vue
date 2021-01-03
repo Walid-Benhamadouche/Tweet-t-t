@@ -69,9 +69,12 @@ export default {
 <style lang="scss" scoped>
   .home {
     padding: 50px 5%;
+    color: white;
   }
   .users-list{
     display: flex;
     flex-direction: column;
+    background-color: #16191a;
+    color: white;
   }
 </style>

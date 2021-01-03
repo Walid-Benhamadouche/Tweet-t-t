@@ -1,19 +1,23 @@
 <template>
   <div class="user-profile">
     <div class="user-profile__userpanel">
-        <h1 class="user-profile__username">@{{user.UserLoaded.UserName}}</h1>
-        <div v-if="user.UserLoaded.IsAdmin" class="user-profile__admin">
-            Admin
+        <div class="bg-image">
         </div>
+        <h1 class="user-profile__username">@{{user.UserLoaded.UserName}}
+          <div v-if="user.UserLoaded.IsAdmin" class="user-profile__admin">
+            Admin
+          </div>
+        </h1>
         <div class="user-profile__follower-count">
             <strong>Following: {{state.following.length}}</strong> <strong>Followers: {{state.followers.length}}</strong>
             <button v-if="!userProfile.test && !state.followState" @click="followF">Follow</button>
             <button v-if="!userProfile.test && state.followState" @click="unfollowF">Unfollow</button>
         </div>
         <button v-if="!userProfile.test" @click="sendMessage">Send Message</button>
-        <CreatTweetPanel v-if="userProfile.test" @addTweet="addTweet"></CreatTweetPanel>
+        
     </div>
     <div class="user-profile__tweet-wrapper">
+      <CreatTweetPanel v-if="userProfile.test" @addTweet="addTweet"></CreatTweetPanel>
       <strong v-if="state.tweets.length === 0">no tweets posted yet</strong>
       <TweetItem class="user-profile__tweet" 
       v-for="tweet in state.tweets" 
@@ -169,28 +173,32 @@ export default {
 
 <style lang="scss" scoped>
 .user-profile {
-    display: grid;
-    grid-template-columns: 1fr 3fr;
-    width: 100%;
-    padding: 50px 5%;
-
+    
+    .bg-image{
+      
+    }
     .user-profile__userpanel {
+        text-align: center;
         display: flex;
+        height: 300px;
+        width: 100%;
         flex-direction: column;
-        margin-right: 50px;
-        padding: 20px;
-        background-color: white;
-        border-radius: 5px;
-        border: 1px solid #DFE3E9;
+        //background-image: url("../assets/40449348_p0_master1200.jpg");
+        //background-repeat: no-repeat;
+        //background-position: center;
+        //background-size: cover;
+        background-color: #636e72;
+        border: 1px solid #636e72;
+        color: white;
 
         h1{
             margin: 0;
         }
 
         .user-profile__admin {
-            background: rebeccapurple;
             color: white;
             border-radius: 5px;
+            margin-top: 15px;
             margin-right: auto;
             padding:  0 10px;
             font-weight: bold;
@@ -201,7 +209,10 @@ export default {
     }
 
     .user-profile__tweet-wrapper {
-        display: grid;
+      background-color: #16191a;
+      width: 100%;
+      padding: 50px 5%;
+      display: grid;
     }
 }
 </style>

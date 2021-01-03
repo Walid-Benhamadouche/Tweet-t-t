@@ -4,9 +4,7 @@
       <ul class="chat-box__body">
           <li v-for="(message,index) in discussion.messages" :key="index">
             <p class="received" v-if="message.Mtype === 'received'">{{message.message}}</p>
-          </li>
-          <li v-for="(message,index) in discussion.messages" :key="index">
-          <p class="sent" v-if="message.Mtype === 'sent'">{{message.message}}</p>
+            <p class="sent" v-if="message.Mtype === 'sent'">{{message.message}}</p>
           </li>
       </ul>
       <div class="chat-box__send-message">
@@ -107,10 +105,11 @@ export default {
       border: 0%;
       padding-left: 21%;
       padding-top: 30%;
-      background-color: white;
+      background-color: #2d3436;
       position: fixed;
       bottom: 0;
       right : 1%;
+      color: white;
 
       .chat-box__name-bar {
         text-align: center;
@@ -118,10 +117,10 @@ export default {
         border: 0%;
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
-        border: 1.5px solid #DFE3E8;
+        border: 1.5px solid #2d3436;
         width: 100%;
         height: 14%;
-        background-color: white;
+        background-color: #212627;
         position: absolute;
         top: 0;
         right: 0;
@@ -131,20 +130,20 @@ export default {
         text-align: center;
         margin: 0;
         border: 0%;
-        border: 1.5px solid #DFE3E8;
+        border: 1.5px solid #2d3436;
         width: 100%;
         height: 12%;
-        background-color: white;
+        background-color: #212627;
         position: absolute;
         bottom: 0;
         right: 0;       
 
         .chat-box__message {
           border-radius: 20px;
-          border: 1.5px solid #DFE3E8;
+          border: 1.5px solid #2d3436;
           height: 60%;
           width: 67%;
-          background-color: azure;
+          background-color: #212627;
           position: absolute;
           top: 16%;
           right: 16%
@@ -164,12 +163,12 @@ export default {
       .chat-box__body {
         margin: 0;
         border: 0%;
-        width: 100%;
+        width: 100.1%;
         height: 72.7%;
-        border-left: 1.5px solid #DFE3E8;
-        border-right: 1.5px solid #DFE3E8;
-        border-bottom: 1.5px solid #DFE3E8;
-        background-color: white;
+        border-left: 1.5px solid #2d3436;
+        border-right: 1.5px solid #2d3436;
+        border-bottom: 1.5px solid #2d3436;
+        background-color: #212627;
         position: absolute;
         bottom: 12%;
         right: 0;
@@ -184,12 +183,12 @@ export default {
             margin-bottom: 5px;
             margin-left: calc(100% - 190px);
             padding: 10px;
-            background-color: #f8e896;
+            background-color: #8395a7;
             width: 150px;
             height: auto;
             text-align: left;
             font: 400 .9em 'Open Sans', sans-serif;
-            border: 1px solid #dfd087;
+            border: 1px solid #8395a7;
             border-radius: 10px;
           }
 
@@ -199,12 +198,12 @@ export default {
             margin-top: 5px;
             margin-bottom: 5px;
             padding: 10px;
-            background-color: #A8DDFD;
+            background-color: #2d3436;
             width: 150px;
             height: auto;
             text-align: left;
             font: 400 .9em 'Open Sans', sans-serif;
-            border: 1px solid #97C6E3;
+            border: 1px solid #2d3436;
             border-radius: 10px;
           }
       }

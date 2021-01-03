@@ -46,7 +46,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   min-height: 10hv;
-  background-color: #F3F5FA;
+  background-color: #16191a;
   height: 100%;
 
   nav {
@@ -54,7 +54,9 @@ export default {
     align-items: center;
     justify-content: space-between;
     padding: 10px 5%;
-    background-color: indigo;
+    border-bottom: 0.5px solid #636e72;
+    height: 5%;
+    background-color: #212627;
     color: white;
 
     .navigation__logo {
