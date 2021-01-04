@@ -1,13 +1,14 @@
 const express = require('express')
 const cors = require('cors')
+const fs = require('fs')
 const User = require('./models/User')
 const router = express.Router();
 
 //check if user is logged in
 router.get('/auth', async (req, res) => {
-  console.log(req.session.loggedIn)
+  //console.log(req.session.loggedIn)
   if(!req.session.loggedIn===true) {
-    console.log("returning false")
+    //console.log("returning false")
     res.json({loggedIn: false})}
   else res.json({loggedIn: true})
 });
@@ -22,17 +23,19 @@ router.get('/getUser', async (req, res) => {
       Email: user.Email,
       FirstName: user.FirstName,
       LastName: user.LastName,
-      IsAdmin: user.IsAdmin
+      IsAdmin: user.IsAdmin,
+      imgT: user.img.contentType,
+      img: user.img.data
     }
+    //console.log("user image object", user.img.data)
     res.json(userInfo)
   }catch(err){
-    console.log(err)
+    //console.log(err)
   }
 })
 
 router.get('/getUserId', async (req, res) => {
   try{
-    console.log("data", req.query._id)
     const user = await User.findOne({ _id: req.query._id})
     const userInfo = {
       _id: user._id, 
@@ -40,23 +43,26 @@ router.get('/getUserId', async (req, res) => {
       Email: user.Email,
       FirstName: user.FirstName,
       LastName: user.LastName,
-      IsAdmin: user.IsAdmin
+      IsAdmin: user.IsAdmin,
+      imgT: user.img.contentType,
+      img: user.img.data
     }
+    //console.log("user image object", user.img)
     res.json(userInfo)
   }catch(err){
-    console.log(err)
+    //console.log(err)
   }
 })
 
 //log in and creat cookie
 router.get('/login', async (req, res) => {
     try{
-      console.log("inside log in function")
+      //console.log("inside log in function")
       const user = await User.findOne({ Email: req.query.Email, HashCode: req.query.HashCode})
       req.session.regenerate(function(err) {
         req.session.loggedIn = true
         req.session._id = user._id;
-        console.log(req.session)
+        //console.log(req.session)
         req.session.save(function(err) {
           if(!err) console.log("saved to store")
           res.cookie(req.session.cookie).send()
@@ -91,7 +97,7 @@ router.post('/signup', async (req, res) => {
     req.session.regenerate(function(err) {
       req.session.loggedIn = true
       req.session._id = savedUser._id;
-      console.log(req.session)
+      //console.log(req.session)
       req.session.save(function(err) {
         if(!err) console.log("saved to store")
         res.cookie(req.session.cookie).send()
@@ -99,6 +105,19 @@ router.post('/signup', async (req, res) => {
 })
   }
   catch(err){
+    res.json({ message: err })
+  }
+})
+
+router.put('/update', async (req, res) => {
+  try{
+    //console.log("updated !!: ",req.body.data.imageType)
+    const user = await User.updateOne({_id: req.session._id}, {img: {
+      data: req.body.data.imageFile,
+      contentType: req.body.data.imageType
+    }})
+    res.json(user)
+  }catch(err){
     res.json({ message: err })
   }
 })

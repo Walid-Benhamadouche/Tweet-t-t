@@ -22,10 +22,10 @@ const io = require('socket.io')(server, {
 
 io.on('connection', (socket) => {
     people[socket.handshake.query.userId] = socket.id
-    console.log("socket.id", people)
+    //console.log("socket.id", people)
     socket.on('message', (message) => {
-        console.log("on message ", message);
-        console.log("socket.id from table",people);
+        //console.log("on message ", message);
+        //console.log("socket.id from table",people);
         io.to(people[message.receiverId]).emit('message', message );
     });
 })
@@ -53,13 +53,13 @@ app.use(cors({
     exposedHeaders: ['set-cookie']
 }))
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(bodyParser.json())
+app.use(bodyParser.json({ limit: '50mb'}))
 app.use(session({
     secret: process.env.SESSION_SECRET,
     store: store,
     name: "testcookie",
     genid: function(req) {
-        console.log('session id created');
+        //console.log('session id created');
         return genuuid()
       },
     saveUninitialized: false,

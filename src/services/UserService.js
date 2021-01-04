@@ -66,5 +66,9 @@ export default {
     async sendMessage(data){
         let message = await axio.post("http://localhost:5000/chat/sendMessage", null, {params: data})
         return message.data
+    },
+    async updateCover(data){
+        let user = await axio.put("http://localhost:5000/users/update", {data})
+        return user.data
     }
 }

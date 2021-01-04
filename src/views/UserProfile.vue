@@ -1,18 +1,20 @@
 <template>
   <div class="user-profile">
     <div class="user-profile__userpanel">
-        <div class="bg-image">
-        </div>
+      <img id="image" src="../assets/color-2174045_640.png">
         <h1 class="user-profile__username">@{{user.UserLoaded.UserName}}
           <div v-if="user.UserLoaded.IsAdmin" class="user-profile__admin">
             Admin
           </div>
         </h1>
+        
         <div class="user-profile__follower-count">
-            <strong>Following: {{state.following.length}}</strong> <strong>Followers: {{state.followers.length}}</strong>
+            <p>Following: {{state.following.length}} Followers: {{state.followers.length}}</p>
             <button v-if="!userProfile.test && !state.followState" @click="followF">Follow</button>
             <button v-if="!userProfile.test && state.followState" @click="unfollowF">Unfollow</button>
+            
         </div>
+        <input class="change_cover" type="file" v-if="userProfile.test" @change="updateCover">
         <button v-if="!userProfile.test" @click="sendMessage">Send Message</button>
         
     </div>
@@ -78,7 +80,10 @@ export default {
       }
       //get all this users tweets
       let temp = userId.value
-
+      if(user.UserLoaded.img){
+        document.getElementById("image").src = user.UserLoaded.img.toString()
+        //console.log(document.getElementById("image").src)
+      }
       UserService.getFollower({_id: temp})
       .then(followerss => {
         for (let frs of followerss){
@@ -123,6 +128,24 @@ export default {
       })
     }
 
+    function updateCover(event){
+      let image
+      //console.log(event)
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        image = e.target.result
+        //console.log("image: ",image.toString())
+        UserService.updateCover({
+          imageFile: image,
+          imageType: event.target.files[0].type
+        }).then(() => {
+          //console.log(user)
+        })
+      }
+      reader.readAsDataURL(event.target.files[0])
+      
+    }
+
     function addTweet(tweetBody) {
       //call api here to add a new tweet
       UserService.Tweet({
@@ -144,7 +167,7 @@ export default {
           })
         }
         else state.room = room._id
-        console.log("room id: ",state.room)
+        //console.log("room id: ",state.room)
         var instance = createApp(chat, {
               chatName: user.UserLoaded.UserName,
               ProfileName: userProfileName,
@@ -164,7 +187,8 @@ export default {
       userId,
       followF,
       unfollowF,
-      sendMessage
+      sendMessage,
+      updateCover
     }
 
   },
@@ -173,26 +197,44 @@ export default {
 
 <style lang="scss" scoped>
 .user-profile {
-    
-    .bg-image{
-      
+    #image{
+        text-align: center;
+        display: flex;
+        height: 350px;
+        justify-content: center;
+        align-items: center;
+        border-bottom-right-radius: 10px;
+        border-bottom-left-radius: 10px;
+        width: 90%;
+        flex-direction: column;
+        object-fit: cover;
     }
     .user-profile__userpanel {
         text-align: center;
+        align-items: center;
         display: flex;
-        height: 300px;
+        height: 490px;
         width: 100%;
         flex-direction: column;
-        //background-image: url("../assets/40449348_p0_master1200.jpg");
-        //background-repeat: no-repeat;
-        //background-position: center;
-        //background-size: cover;
-        background-color: #636e72;
-        border: 1px solid #636e72;
+        background-image: linear-gradient(rgba(8,7,68,1) 41%, rgba(11,11,121,0.7) 71%, rgba(108,9,119,0.3) 100%);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        background-color: #16191a;
+        border-bottom: 0.1px solid #212627;
         color: white;
 
         h1{
             margin: 0;
+        }
+
+        .change_cover{
+          position: absolute;
+          left: 5%;
+        }
+
+        .user-profile__username{
+          color: white;
         }
 
         .user-profile__admin {
@@ -200,12 +242,9 @@ export default {
             border-radius: 5px;
             margin-top: 15px;
             margin-right: auto;
-            padding:  0 10px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        
+            font-size: 18px;
+            font-weight: normal;
+        }   
     }
 
     .user-profile__tweet-wrapper {

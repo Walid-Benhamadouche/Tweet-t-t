@@ -51,21 +51,24 @@ router.beforeEach(async(to,from,next) => {
   const auth = await UserService.auth()
   const requiresUser = to.matched.some(record => record.meta.requiresUser)
   
-  console.log(auth.loggedIn)
+  //console.log(auth.loggedIn)
   if(store.state.User.user === null && !requiresUser){
-    console.log("in signup") 
+    //console.log("in signup") 
     next();
   }
   else if(!auth.loggedIn) {
-    console.log("here")
+    //console.log("here")
     next({ name: 'signup'})
   }
-  else{
-    console.log("getting user")
+  else if(store.state.User.user === null){
+    //console.log("getting user")
     const user = await UserService.getUser()
-    console.log("user: ", user)
+    //console.log("user: ", user)
     store.dispatch('User/setUser', user)
     next();
+  }
+  else{
+    next()
   }
 })
 

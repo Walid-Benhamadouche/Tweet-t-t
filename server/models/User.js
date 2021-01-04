@@ -7,6 +7,11 @@ const UserSchema = mongoose.Schema({
     FirstName: String,
     LastName: String,
     IsAdmin: Boolean,
+    img:
+    {
+        data: String,
+        contentType: String,
+    }
 });
 
 module.exports = mongoose.model('User', UserSchema)
