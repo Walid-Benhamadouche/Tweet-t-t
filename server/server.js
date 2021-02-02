@@ -1,5 +1,7 @@
 const app = require('express')()
 var path = require('path')
+const serveStatic = require('serve-static')
+var compression = require('compression')
 const history = require('connect-history-api-fallback')
 const enforce = require('express-sslify')
 const cors = require('cors')
@@ -48,7 +50,8 @@ store.on('error', function(error){
 })
 
 app.use(enforce.HTTPS({ trustProtoHeader: true }))
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(compression())
+app.use(serveStatic(path.join(__dirname, 'public')))
 app.use(history())
 
 app.use(cors({
