@@ -47,7 +47,7 @@ store.on('error', function(error){
     console.log("error in the store.on section")
 })
 
-//app.use(enforce.HTTPS({ trustProtoHeadr: true}))
+app.use(enforce.HTTPS({ trustProtoHeadr: true}))
 app.use(serveStatic(__dirname + '/dist'))
 app.use(history())
 
