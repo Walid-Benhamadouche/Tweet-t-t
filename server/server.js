@@ -53,7 +53,7 @@ app.use(enforce.HTTPS({ trustProtoHeader: true }))
 app.use(compression())
 app.use(serveStatic(path.join(__dirname, 'public')))
 app.use(history())
-print("port", process.env.baseURL)
+console.log("port", process.env.baseURL)
 app.use(cors({
     origin: [
       'https://vuejslearningapp.herokuapp.com/'||'http://localhost:8080',
