@@ -47,7 +47,7 @@ store.on('error', function(error){
     console.log("error in the store.on section")
 })
 
-app.use(enforce.HTTPS({ trustProtoHeadr: true}))
+app.use(enforce.HTTPS({ trustProtoHeader: true }))
 app.use(serveStatic(__dirname + '/dist'))
 app.use(history())
 
@@ -77,12 +77,6 @@ app.use(session({
         maxAge: parseInt(process.env.SESSION_MAX_AGE)
     }
 }))
-app.get('*',function(req,res,next){
-    if(req.headers['x-forwarded-proto']!='https')
-      res.redirect('https://vuejslearningapp.herokuapp.com'+req.url)
-    else
-      next() /* Continue to other routes if we're not redirecting */
-  })
 app.use('/users', postsRoute)
 app.use('/tweet', tweet)
 app.use('/follow', follow)
