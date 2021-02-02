@@ -1,4 +1,7 @@
 const app = require('express')()
+const serveStatic = require('serve-static')
+const history = require('connect-history-api-fallback')
+const enforce = require('express-sslify')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
@@ -43,6 +46,10 @@ const store = new MongoDBStore(
 store.on('error', function(error){
     console.log("error in the store.on section")
 })
+
+app.use(enforce.HTTPS({ trustProtoHeadr: true}))
+app.use(serveStatic(__dirname + '/dist'))
+app.use(history())
 
 app.use(cors({
     origin: [
