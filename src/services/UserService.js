@@ -1,7 +1,6 @@
 import axio from "axios"
 
 axio.defaults.withCredentials = true
-const baseURL = process.env.baseURL || "http://localhost:5000"
 export default {
     async auth(){
         let auth = await axio.get(process.env.baseURL+"/users/auth")
