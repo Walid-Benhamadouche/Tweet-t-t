@@ -49,7 +49,7 @@ store.on('error', function(error){
 })
 
 app.use(enforce.HTTPS({ trustProtoHeader: true }))
-app.use(serveStatic(path.join(__dirname, 'dist')))
+app.use(serveStatic(path.join(__dirname, 'public')))
 app.use(history())
 
 app.use(cors({
