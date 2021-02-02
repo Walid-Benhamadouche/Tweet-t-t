@@ -47,7 +47,7 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach(async(to,from,next) => {
+/*router.beforeEach(async(to,from,next) => {
   const auth = await UserService.auth()
   const requiresUser = to.matched.some(record => record.meta.requiresUser)
   
@@ -70,6 +70,6 @@ router.beforeEach(async(to,from,next) => {
   else{
     next()
   }
-})
+})*/
 
 export default router
