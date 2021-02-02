@@ -77,7 +77,12 @@ app.use(session({
         maxAge: parseInt(process.env.SESSION_MAX_AGE)
     }
 }))
-
+app.get('*',function(req,res,next){
+    if(req.headers['x-forwarded-proto']!='https')
+      res.redirect('https://mypreferreddomain.com'+req.url)
+    else
+      next() /* Continue to other routes if we're not redirecting */
+  })
 app.use('/users', postsRoute)
 app.use('/tweet', tweet)
 app.use('/follow', follow)

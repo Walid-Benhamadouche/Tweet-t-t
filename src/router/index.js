@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-//import store from '../store/index'
-//import UserService from '../services/UserService'
+import store from '../store/index'
+import UserService from '../services/UserService'
 import Home from '../views/Home.vue'
 import UserProfile from '../views/UserProfile.vue'
 import LogInSignUp from '../views/LogInSignUp.vue'
@@ -47,7 +47,7 @@ const router = createRouter({
   routes
 })
 
-/*router.beforeEach(async(to,from,next) => {
+router.beforeEach(async(to,from,next) => {
   const auth = await UserService.auth()
   const requiresUser = to.matched.some(record => record.meta.requiresUser)
   
@@ -70,6 +70,6 @@ const router = createRouter({
   else{
     next()
   }
-})*/
+})
 
 export default router
