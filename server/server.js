@@ -1,5 +1,6 @@
 const app = require('express')()
-//const serveStatic = require('serve-static')
+var path = require('path')
+const serveStatic = require('serve-static')
 const history = require('connect-history-api-fallback')
 const enforce = require('express-sslify')
 const cors = require('cors')
@@ -48,8 +49,7 @@ store.on('error', function(error){
 })
 
 app.use(enforce.HTTPS({ trustProtoHeader: true }))
-var distDir = __dirname + "/dist/";
-app.use(express.static(distDir))
+app.use(serveStatic(path.join(__dirname, 'dist')))
 app.use(history())
 
 app.use(cors({
