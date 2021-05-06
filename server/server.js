@@ -11,6 +11,13 @@ const MongoDBStore = require('connect-mongodb-session')(session)
 require('dotenv/config')
 const genuuid = require('uuid/v4');
 
+if (process.env.NODE_ENV === "production"){
+    app.use(express.static("build"));
+    app.get("*", (req, res) => {
+      res.sendFile(path.resolve(__dirname,  "build", "index.html"));
+    });
+  }
+
 mongoose.connect(process.env.DB_CONNECTION,{ useNewUrlParser: true,useUnifiedTopology: true },()=>{console.log("connected to mongo")})
 
 //`Hi! Server is listening on port ${port}`
@@ -79,10 +86,4 @@ app.use('/chat', chat)
 const port = 5000
 
 server.listen(process.env.PORT || port)
-if (process.env.NODE_ENV === "production"){
-    app.use(express.static("build"));
-    app.get("*", (req, res) => {
-      res.sendFile(path.resolve(__dirname,  "build", "index.html"));
-    });
-  }
 module.exports = server
