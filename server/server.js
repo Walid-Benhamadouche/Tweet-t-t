@@ -76,7 +76,7 @@ app.use('/tweet', tweet)
 app.use('/follow', follow)
 app.use('/chat', chat)
 
-//const port = 5000
+const port = 5000
 
-//server.listen(port)
+server.listen(process.env.PORT || port)
 module.exports = server
