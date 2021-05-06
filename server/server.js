@@ -1,9 +1,4 @@
 const app = require('express')()
-var path = require('path')
-const serveStatic = require('serve-static')
-var compression = require('compression')
-const history = require('connect-history-api-fallback')
-const enforce = require('express-sslify')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
@@ -49,15 +44,10 @@ store.on('error', function(error){
     console.log("error in the store.on section")
 })
 
-app.use(enforce.HTTPS({ trustProtoHeader: true }))
-app.use(compression())
-app.use(serveStatic(path.join(__dirname, 'public')))
-app.use(history())
-console.log("port", process.env.BASE_URL)
 app.use(cors({
     origin: [
-      'https://vuejslearningapp.herokuapp.com/'||'http://localhost:8080',
-      'https://vuejslearningapp.herokuapp.com/'||'https://localhost:8080'
+      'http://localhost:8080',
+      'https://localhost:8080'
     ],
     credentials: true,
     exposedHeaders: ['set-cookie']
@@ -80,6 +70,7 @@ app.use(session({
         maxAge: parseInt(process.env.SESSION_MAX_AGE)
     }
 }))
+
 app.use('/users', postsRoute)
 app.use('/tweet', tweet)
 app.use('/follow', follow)
